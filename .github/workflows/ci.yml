@@ -13,19 +13,10 @@ concurrency:
 
 jobs:
   quality:
-    uses: WyattAu/engineering-standards/.github/workflows/rust-kit.yml@e23c50cf289f55bbb91001c91bbac7de018c11c3 # main @ 2026-10-03
+    uses: WyattAu/engineering-standards/.github/workflows/rust-kit.yml@024f2b5fc013a77316077cea58c9820d1bbfdd28 # main @ 2026-10-03
     with:
-      tier: b
+      tier: b            # ≥80% line coverage; golden + property suites
       all-features: true
-
-  wasm:
-    # REQ-Q2: the index format must build unmodified for the browser target.
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@f13886b937689c021905a6b90929199931d60db1 # v2.8.1
-      - name: build for wasm32-unknown-unknown
-        run: cargo build --locked --target wasm32-unknown-unknown
+      loom: false        # n/a — no lock-free shared-memory primitives (recorded)
+      wasm: true         # REQ-Q2: the index format builds for the browser target
+      miri: false        # n/a — no unsafe blocks, no FFI
