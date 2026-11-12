@@ -52,6 +52,16 @@ errors, total: see the corruption-sweep and property tests).
   the compiler's job; this crate stores terms, frequencies, lengths, and
   (optionally) quantized vectors.
 
+## Where the truth lives
+
+| Concern | Truth | Path |
+|---|---|---|
+| Format layout (v2 magic, header fields, section order) | source of record | `src/format.rs` |
+| Build, decode, BM25 query, quantized vectors | source of record | `src/index.rs` |
+| Typed build/decode failures | source of record | `src/error.rs` |
+| REQ-Q anchors (client runtime contract) | SPEC | `docs-core/SPEC.md` |
+| Layer declaration + dependency floor | manifest metadata | `Cargo.toml` |
+
 ## Layer
 
 L0 - leaf. Zero estate-internal dependencies. External floor: `fst`,
