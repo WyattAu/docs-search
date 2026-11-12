@@ -1,24 +1,32 @@
-//! Wire format: header, cursor, and section writers.
+//! Wire format: header, cursor, and section layout.
 //!
-//! Layout (all integers little-endian):
+//! Layout (all integers little-endian; format 2):
 //!
 //! ```text
-//! magic   6 bytes  "DSIDX1"
-//! version u32      format version (currently 1)
+//! magic   6 bytes  "DSIDX2"
+//! version u32      format version (currently 2)
 //! docs    u64      document count
 //! fst_len u64      byte length of the FST dictionary section
+//! vec_len u64      byte length of the quantized-vector section (0 when absent)
+//! dim     u32      vector dimension (0 when absent)
 //! doc_lens(docs * u64)            document byte-lengths, by doc id
 //! fst(fst_len)                    term -> postings offset (u64)
-//! postings  (remainder)           concatenated [u32 len][bitmap bytes]
+//! postings  (to end - vec_len)    repeated [u32 byte_len][ (doc u32, tf u16) * ]
+//! vectors(vec_len)                [u32 count][ (doc u32, scale f32, norm f32, dim * i8) * ]
 //! ```
+//!
+//! Format 1 carried presence bitmaps and unit term frequency; format 2
+//! replaced the bitmaps with explicit (doc, tf) pair lists so ranking has
+//! a real frequency signal, and added the fixed-header vector fields the
+//! `vectors` feature reads and writes.
 
 use crate::error::IndexError;
 
 /// The 6-byte magic every index starts with.
-pub(crate) const MAGIC: [u8; 6] = *b"DSIDX1";
+pub(crate) const MAGIC: [u8; 6] = *b"DSIDX2";
 
 /// The format version this crate writes and decodes.
-pub(crate) const VERSION: u32 = 1;
+pub(crate) const VERSION: u32 = 2;
 
 /// Bounds-checked little-endian reader over a byte slice.
 pub(crate) struct Reader<'a> {
@@ -63,6 +71,40 @@ impl<'a> Reader<'a> {
         let mut raw = [0u8; 8];
         raw.copy_from_slice(bytes);
         Ok(u64::from_le_bytes(raw))
+    }
+
+    /// Read one `u32`, advancing the cursor.
+    pub(crate) fn u32(&mut self) -> Result<u32, IndexError> {
+        let bytes = self.take(4).ok_or(IndexError::Truncated {
+            section: "u32 field",
+        })?;
+        let mut raw = [0u8; 4];
+        raw.copy_from_slice(bytes);
+        Ok(u32::from_le_bytes(raw))
+    }
+
+    /// Read one `f32`, advancing the cursor.
+    pub(crate) fn f32(&mut self) -> Result<f32, IndexError> {
+        let bytes = self.take(4).ok_or(IndexError::Truncated {
+            section: "f32 field",
+        })?;
+        let mut raw = [0u8; 4];
+        raw.copy_from_slice(bytes);
+        Ok(f32::from_le_bytes(raw))
+    }
+
+    /// Read one `i8`, advancing the cursor.
+    pub(crate) fn i8(&mut self) -> Result<i8, IndexError> {
+        let bytes = self.take(1).ok_or(IndexError::Truncated {
+            section: "i8 field",
+        })?;
+        bytes
+            .first()
+            .copied()
+            .map(|b| b as i8)
+            .ok_or(IndexError::Truncated {
+                section: "i8 field",
+            })
     }
 
     fn take(&mut self, n: usize) -> Option<&'a [u8]> {

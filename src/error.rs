@@ -24,20 +24,32 @@ pub enum IndexError {
         section: &'static str,
     },
     /// A section's internal structure is inconsistent (bad offset, bad
-    /// bitmap bytes, overflowing count).
+    /// postings, overflowing count, non-finite vector metadata).
     Corrupt {
         /// What was inconsistent, for diagnosis.
         reason: &'static str,
     },
     /// The FST dictionary itself failed to load.
     Fst(fst::Error),
+    /// The index carries a quantized-vector section, but this build was
+    /// compiled without the `vectors` feature. Rebuild with the feature,
+    /// or use an index built without vectors.
+    VectorsUnsupported,
+    /// A vector was set with a dimension different from the one already
+    /// established for this index.
+    VectorDim {
+        /// Dimension of the first vector added (or of the index so far).
+        expected: u32,
+        /// Dimension of the offending vector.
+        found: u32,
+    },
 }
 
 impl fmt::Display for IndexError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::InvalidMagic { found } => {
-                write!(f, "invalid magic: expected \"DSIDX1\", found {found:02x?}")
+                write!(f, "invalid magic: expected \"DSIDX2\", found {found:02x?}")
             }
             Self::UnsupportedVersion { found, supported } => {
                 write!(
@@ -50,6 +62,13 @@ impl fmt::Display for IndexError {
             }
             Self::Corrupt { reason } => write!(f, "corrupt index: {reason}"),
             Self::Fst(e) => write!(f, "term dictionary error: {e}"),
+            Self::VectorsUnsupported => write!(
+                f,
+                "index carries a quantized-vector section; rebuild with the `vectors` feature to read it"
+            ),
+            Self::VectorDim { expected, found } => {
+                write!(f, "vector dimension {found} does not match the index dimension {expected}")
+            }
         }
     }
 }

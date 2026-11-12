@@ -1,6 +1,6 @@
 [package]
 name = "docs-search"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 rust-version = "1.85"
 authors = ["Wyatt Au <wyatt_au@protonmail.com>"]
@@ -8,22 +8,24 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/WyattAu/docs-search"
 homepage = "https://github.com/WyattAu/docs-search"
 documentation = "https://docs.rs/docs-search"
-description = "Client-side search index for docs sites: FST term dictionary with roaring-bitmap postings, BM25-shaped ranking, wasm32-clean bytes-in/bytes-out format (docs-core extension program, SPEC.md REQ-Q)"
+description = "Client-side search index for docs sites: FST term dictionary, tf postings with full BM25, optional quantized-vector section (vectors feature), wasm32-clean bytes-in/bytes-out format (docs-core extension program, SPEC.md REQ-Q)"
 readme = "README.md"
-keywords = ["search", "fst", "roaring", "wasm", "documentation"]
+keywords = ["search", "fst", "bm25", "wasm", "documentation"]
 categories = ["text-processing", "data-structures", "wasm"]
 exclude = [".github/", "supply-chain/"]
 
 # Layer model: docs/layers.md in WyattAu/engineering-standards.
-# L0 - leaf: zero estate-internal dependencies. fst + roaring are external
-# leaf crates; the index format is plain bytes so the crate builds for
+# L0 - leaf: zero estate-internal dependencies. The external floor is fst
+# and thiserror; the index format is plain bytes so the crate builds for
 # wasm32-unknown-unknown unmodified (SPEC.md REQ-Q2).
 [package.metadata.layers]
 tier = "L0"
 
+[features]
+vectors = []
+
 [dependencies]
 fst = "0.4"
-roaring = "0.12"
 thiserror = "2"
 
 [dev-dependencies]

@@ -58,3 +58,29 @@ proptest! {
         }
     }
 }
+
+#[cfg(feature = "vectors")]
+proptest! {
+    #![proptest_config(ProptestConfig::with_cases(256))]
+
+    #[test]
+    fn corrupted_vector_input_never_panics(
+        cut in 0usize..400,
+        bitflip in 0usize..400,
+    ) {
+        let mut b = IndexBuilder::new();
+        let d0 = b.add_doc("alpha beta gamma");
+        let d1 = b.add_doc("beta delta epsilon zeta eta theta");
+        lib_ok(b.set_vector(d0 as u32, &[1.0, -2.5, 0.125]))?;
+        lib_ok(b.set_vector(d1 as u32, &[0.0, 3.0, -7.25]))?;
+        let mut bytes = lib_ok(b.build())?;
+
+        let cut = cut.min(bytes.len());
+        bytes.truncate(cut);
+        if let Some(slot) = bytes.get_mut(bitflip) {
+            *slot ^= 0xff;
+        }
+        // The only contract: decoding is total. Ok or Err, never panic.
+        let _ = Index::from_bytes(&bytes);
+    }
+}
