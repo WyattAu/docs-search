@@ -58,3 +58,17 @@ All notable changes to this project are documented in this file.
   malformed-bytes failure.
 - `#![forbid(unsafe_code)]` relaxed to `deny` with a scoped module
   allow in src/wasm.rs (the raw-pointer boundary is the interface).
+
+### Fixed (0.3.1)
+
+- Wasmtime dev-dep bumped 26 -> 36: the 26 line carried RustSec
+  advisories (fd_renumber panic, shared-memory unsoundness) that the
+  deny gate flagged on the new wasm-reader-oracle CI job.
+
+## [0.3.1] - 2026-11-17
+
+### Fixed
+
+- Wasmtime dev-dep bumped 26 -> 36: the 26 line carried RustSec
+  advisories (fd_renumber panic, shared-memory unsoundness) that the
+  deny gate flagged on the new wasm-reader-oracle CI job.

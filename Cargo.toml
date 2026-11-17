@@ -1,6 +1,6 @@
 [package]
 name = "docs-search"
-version = "0.3.0"
+version = "0.3.1"
 edition = "2021"
 rust-version = "1.85"
 authors = ["Wyatt Au <wyatt_au@protonmail.com>"]
@@ -38,7 +38,7 @@ proptest = "1"
 # The wasm reader oracle (tests/wasm_reader.rs) loads the built cdylib
 # in wasmtime and drives the C ABI exactly as the browser JS glue does.
 # Host-only (dev), gated on DOCS_SEARCH_WASM in CI.
-wasmtime = { version = "26", default-features = false, features = ["cranelift", "runtime", "std"] }
+wasmtime = { version = "36", default-features = false, features = ["cranelift", "runtime", "std"] }
 
 [lints.rust]
 missing_docs = "deny"
