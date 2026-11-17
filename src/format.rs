@@ -89,6 +89,32 @@ impl<'a> Reader<'a> {
         self.pos = end;
         Some(bytes)
     }
+
+    /// Read one `f32`, advancing the cursor. Used by the vectors
+    /// feature's quantized-vector section (0.3.0+).
+    pub(crate) fn f32(&mut self) -> Result<f32, IndexError> {
+        let bytes = self.take(4).ok_or(IndexError::Truncated {
+            section: "f32 field",
+        })?;
+        let mut raw = [0u8; 4];
+        raw.copy_from_slice(bytes);
+        Ok(f32::from_le_bytes(raw))
+    }
+
+    /// Read one `i8`, advancing the cursor. Used by the vectors
+    /// feature's quantized-vector section (0.3.0+).
+    pub(crate) fn i8(&mut self) -> Result<i8, IndexError> {
+        let bytes = self.take(1).ok_or(IndexError::Truncated {
+            section: "i8 field",
+        })?;
+        bytes
+            .first()
+            .copied()
+            .map(|b| b as i8)
+            .ok_or(IndexError::Truncated {
+                section: "i8 field",
+            })
+    }
 }
 
 /// Append a little-endian `u64` to a buffer.
