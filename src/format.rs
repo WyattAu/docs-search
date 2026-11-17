@@ -83,30 +83,6 @@ impl<'a> Reader<'a> {
         Ok(u32::from_le_bytes(raw))
     }
 
-    /// Read one `f32`, advancing the cursor.
-    pub(crate) fn f32(&mut self) -> Result<f32, IndexError> {
-        let bytes = self.take(4).ok_or(IndexError::Truncated {
-            section: "f32 field",
-        })?;
-        let mut raw = [0u8; 4];
-        raw.copy_from_slice(bytes);
-        Ok(f32::from_le_bytes(raw))
-    }
-
-    /// Read one `i8`, advancing the cursor.
-    pub(crate) fn i8(&mut self) -> Result<i8, IndexError> {
-        let bytes = self.take(1).ok_or(IndexError::Truncated {
-            section: "i8 field",
-        })?;
-        bytes
-            .first()
-            .copied()
-            .map(|b| b as i8)
-            .ok_or(IndexError::Truncated {
-                section: "i8 field",
-            })
-    }
-
     fn take(&mut self, n: usize) -> Option<&'a [u8]> {
         let end = self.pos.checked_add(n)?;
         let bytes = self.buf.get(self.pos..end)?;

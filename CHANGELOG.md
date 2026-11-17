@@ -40,3 +40,21 @@ All notable changes to this project are documented in this file.
 - `IndexError::VectorsUnsupported` and `IndexError::VectorDim`.
 - Vector corruption property test (256 cases of truncation + bitflip
   over a vectors-carrying blob: decode stays total).
+
+## [0.3.0] - 2026-11-17
+
+### Added
+
+- **Wasm reader ABI (Wave 2d.5)**: the browser half of the search story.
+  A wasm32 cdylib (`docs_search.wasm`, 94 KB release) exposing a
+  hand-rolled C ABI — `dsidx_alloc`/`dsidx_free` (exact-len boxed
+  slices), `dsidx_open` (parse `search.bin`), `dsidx_query` (BM25 into
+  a host out-buffer, comma-joined JSON results), `dsidx_close` —
+  mirroring docs-proof's checker pattern. Zero dependencies beyond
+  fst/thiserror; runs entirely client-side.
+- **Wasmtime oracle** (`tests/wasm_reader.rs`, gated on
+  `DOCS_SEARCH_WASM`): drives the built cdylib through the exact call
+  sequence the JS glue uses — open, query "sagas"/"parse"/AND-miss,
+  malformed-bytes failure.
+- `#![forbid(unsafe_code)]` relaxed to `deny` with a scoped module
+  allow in src/wasm.rs (the raw-pointer boundary is the interface).

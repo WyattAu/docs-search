@@ -60,7 +60,9 @@ impl Reader {
             .expect("alloc");
         {
             let raw = self.memory.data_mut(&mut self.store);
-            let dst = &mut raw[ptr as usize..ptr as usize + bytes.len()];
+            let dst = raw
+                .get_mut(ptr as usize..ptr as usize + bytes.len())
+                .expect("write into memory bounds");
             dst.copy_from_slice(bytes);
         }
         (ptr, bytes.len() as u32)
