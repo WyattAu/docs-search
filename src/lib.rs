@@ -40,11 +40,17 @@
 //! 0.2; pair lists need nothing beyond the core).
 
 #![deny(missing_docs)]
-#![forbid(unsafe_code)]
+// `unsafe` is denied everywhere except src/wasm.rs — the wasm32-only
+// C ABI module (browser reader), where raw pointer crossings are the
+// interface itself. That module re-allows locally and documents every use.
+#![deny(unsafe_code)]
 
 mod error;
 mod format;
 mod index;
+
+#[cfg(target_arch = "wasm32")]
+mod wasm;
 
 pub use error::IndexError;
 pub use index::{Hit, Index, IndexBuilder};

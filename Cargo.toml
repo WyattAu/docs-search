@@ -1,6 +1,6 @@
 [package]
 name = "docs-search"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 rust-version = "1.85"
 authors = ["Wyatt Au <wyatt_au@protonmail.com>"]
@@ -21,6 +21,11 @@ exclude = [".github/", "supply-chain/"]
 [package.metadata.layers]
 tier = "L0"
 
+[lib]
+# rlib for dependents; the cdylib shape is produced for wasm32 by
+# `cargo rustc --crate-type cdylib` (the browser reader artifact).
+crate-type = ["rlib"]
+
 [features]
 vectors = []
 
@@ -30,6 +35,10 @@ thiserror = "2"
 
 [dev-dependencies]
 proptest = "1"
+# The wasm reader oracle (tests/wasm_reader.rs) loads the built cdylib
+# in wasmtime and drives the C ABI exactly as the browser JS glue does.
+# Host-only (dev), gated on DOCS_SEARCH_WASM in CI.
+wasmtime = { version = "26", default-features = false, features = ["cranelift", "runtime", "std"] }
 
 [lints.rust]
 missing_docs = "deny"
