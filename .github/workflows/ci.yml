@@ -20,3 +20,18 @@ jobs:
       loom: false        # n/a — no lock-free shared-memory primitives (recorded)
       wasm: true         # REQ-Q2: the index format builds for the browser target
       miri: false        # n/a — no unsafe blocks, no FFI
+
+  wasm-reader-oracle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - name: build cdylib (release)
+        run: cargo rustc --lib --crate-type cdylib --target wasm32-unknown-unknown --release
+      - name: run the wasm reader oracle
+        run: cargo test --test wasm_reader --release
+        env:
+          DOCS_SEARCH_WASM: ${{ github.workspace }}/target/wasm32-unknown-unknown/release/docs_search.wasm
