@@ -305,7 +305,7 @@ dependencies = [
 
 [[package]]
 name = "docs-search"
-version = "0.3.0"
+version = "0.3.1"
 dependencies = [
  "fst",
  "proptest",
