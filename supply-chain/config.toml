@@ -81,55 +81,55 @@ version = "0.3.1"
 criteria = "safe-to-run"
 
 [[exemptions.cranelift-assembler-x64]]
-version = "0.123.21"
+version = "0.123.23"
 criteria = "safe-to-run"
 
 [[exemptions.cranelift-assembler-x64-meta]]
-version = "0.123.21"
+version = "0.123.23"
 criteria = "safe-to-run"
 
 [[exemptions.cranelift-bforest]]
-version = "0.123.21"
+version = "0.123.23"
 criteria = "safe-to-run"
 
 [[exemptions.cranelift-bitset]]
-version = "0.123.21"
+version = "0.123.23"
 criteria = "safe-to-run"
 
 [[exemptions.cranelift-codegen]]
-version = "0.123.21"
+version = "0.123.23"
 criteria = "safe-to-run"
 
 [[exemptions.cranelift-codegen-meta]]
-version = "0.123.21"
+version = "0.123.23"
 criteria = "safe-to-run"
 
 [[exemptions.cranelift-codegen-shared]]
-version = "0.123.21"
+version = "0.123.23"
 criteria = "safe-to-run"
 
 [[exemptions.cranelift-control]]
-version = "0.123.21"
+version = "0.123.23"
 criteria = "safe-to-run"
 
 [[exemptions.cranelift-entity]]
-version = "0.123.21"
+version = "0.123.23"
 criteria = "safe-to-run"
 
 [[exemptions.cranelift-frontend]]
-version = "0.123.21"
+version = "0.123.23"
 criteria = "safe-to-run"
 
 [[exemptions.cranelift-isle]]
-version = "0.123.21"
+version = "0.123.23"
 criteria = "safe-to-run"
 
 [[exemptions.cranelift-native]]
-version = "0.123.21"
+version = "0.123.23"
 criteria = "safe-to-run"
 
 [[exemptions.cranelift-srcgen]]
-version = "0.123.21"
+version = "0.123.23"
 criteria = "safe-to-run"
 
 [[exemptions.crc32fast]]
@@ -269,11 +269,11 @@ version = "1.12.0"
 criteria = "safe-to-run"
 
 [[exemptions.pulley-interpreter]]
-version = "36.0.21"
+version = "36.0.23"
 criteria = "safe-to-run"
 
 [[exemptions.pulley-macros]]
-version = "36.0.21"
+version = "36.0.23"
 criteria = "safe-to-run"
 
 [[exemptions.quick-error]]
@@ -413,47 +413,47 @@ version = "0.236.1"
 criteria = "safe-to-run"
 
 [[exemptions.wasmtime]]
-version = "36.0.21"
+version = "36.0.23"
 criteria = "safe-to-run"
 
 [[exemptions.wasmtime-environ]]
-version = "36.0.21"
+version = "36.0.23"
 criteria = "safe-to-run"
 
 [[exemptions.wasmtime-internal-asm-macros]]
-version = "36.0.21"
+version = "36.0.23"
 criteria = "safe-to-run"
 
 [[exemptions.wasmtime-internal-cranelift]]
-version = "36.0.21"
+version = "36.0.23"
 criteria = "safe-to-run"
 
 [[exemptions.wasmtime-internal-fiber]]
-version = "36.0.21"
+version = "36.0.23"
 criteria = "safe-to-run"
 
 [[exemptions.wasmtime-internal-jit-debug]]
-version = "36.0.21"
+version = "36.0.23"
 criteria = "safe-to-run"
 
 [[exemptions.wasmtime-internal-jit-icache-coherence]]
-version = "36.0.21"
+version = "36.0.23"
 criteria = "safe-to-run"
 
 [[exemptions.wasmtime-internal-math]]
-version = "36.0.21"
+version = "36.0.23"
 criteria = "safe-to-run"
 
 [[exemptions.wasmtime-internal-slab]]
-version = "36.0.21"
+version = "36.0.23"
 criteria = "safe-to-run"
 
 [[exemptions.wasmtime-internal-unwinder]]
-version = "36.0.21"
+version = "36.0.23"
 criteria = "safe-to-run"
 
 [[exemptions.wasmtime-internal-versioned-export-macros]]
-version = "36.0.21"
+version = "36.0.23"
 criteria = "safe-to-run"
 
 [[exemptions.winapi-util]]
